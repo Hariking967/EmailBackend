@@ -4,10 +4,12 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import os
 from dotenv import load_dotenv
+from flask_cors import CORS
 
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 
 # Gmail credentials from .env
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")
