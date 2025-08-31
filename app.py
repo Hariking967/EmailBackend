@@ -7,19 +7,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 app = Flask(__name__)
 
-# Your Gmail credentials
-SENDER_EMAIL = os.getenv("EMAIL")
+# Gmail credentials from .env
+SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 APP_PASSWORD = os.getenv("APP_PASSWORD")
 
 
-def send_email(to_email, subject, body, from_email=SENDER_EMAIL):
+def send_email(to_email, subject, body):
     try:
         # Create message
         message = MIMEMultipart()
-        message['From'] = from_email
+        message['From'] = SENDER_EMAIL
         message['To'] = to_email
         message['Subject'] = subject
         message.attach(MIMEText(body, 'plain'))
@@ -43,12 +42,11 @@ def send_email_api():
     to_email = data.get("to")
     subject = data.get("subject")
     body = data.get("body")
-    from_email = data.get("from", SENDER_EMAIL)  # optional override
 
     if not to_email or not subject or not body:
         return jsonify({"error": "Missing required fields"}), 400
 
-    success, msg = send_email(to_email, subject, body, from_email)
+    success, msg = send_email(to_email, subject, body)
     if success:
         return jsonify({"message": msg}), 200
     else:
